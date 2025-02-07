@@ -53,31 +53,33 @@ class Main {
 
 // } Driver Code Ends
 
-
+// Kahn's algo
 class Solution {
     // Function to return list containing vertices in Topological order.
     static ArrayList<Integer> topologicalSort(ArrayList<ArrayList<Integer>> adj) {
-        Deque<Integer> st = new ArrayDeque<>();
-        boolean[] vis = new boolean[adj.size()];
+        int V = adj.size();
+        int[] indegree = new int[V];
+        Queue<Integer> q = new LinkedList<>();
         
-        for (int i = 0; i < adj.size(); i++) {
-            if (!vis[i]) dfs(i, vis, adj, st);
+        for (int i = 0; i < V; i++)
+            for (int j = 0; j < adj.get(i).size(); j++)
+                indegree[adj.get(i).get(j)]++;
+                
+        for (int i = 0; i < V; i++) {
+            if (indegree[i] == 0) q.offer(i);
         }
         
-        ArrayList<Integer> list = new ArrayList<>();
-        
-        st.forEach(el -> list.add(el));
-        
-        return list; 
-    }
-    
-    private static void dfs(int node, boolean[] vis, ArrayList<ArrayList<Integer>> adj, Deque<Integer> st) {
-        vis[node] = true;
-        
-        for (int adjNode: adj.get(node)) {
-            if (!vis[adjNode]) dfs(adjNode, vis, adj, st);
+        ArrayList<Integer> ans = new ArrayList<>();
+        while (!q.isEmpty()) {
+            int node = q.poll();
+            ans.add(node);
+            
+            for (int adjNode: adj.get(node)) {
+                indegree[adjNode]--;
+                if (indegree[adjNode] == 0) q.offer(adjNode);
+            }
         }
         
-        st.push(node);
+        return ans;
     }
 }
