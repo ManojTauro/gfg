@@ -57,77 +57,74 @@ public class Main {
 // } Driver Code Ends
 
 
+class Pair {
+    int node;
+    int dis;
+    
+    public Pair(int n, int d) {
+        node = n;
+        dis = d;
+    }
+}
 class Solution {
     public List<Integer> shortestPath(int n, int m, int edges[][]) {
-        ArrayList<ArrayList<Pair>> adj = new ArrayList<>();
+        int V = n + 1;
         
-        for(int i = 0; i <= n; i++) adj.add(new ArrayList<>()); 
+        List<List<Pair>> adj = new ArrayList<>();
         
-        for(int i = 0; i < m; i++) {
-            adj.get(edges[i][0]).add(new Pair(edges[i][1], edges[i][2])); 
-            adj.get(edges[i][1]).add(new Pair(edges[i][0], edges[i][2])); 
+        for (int i = 0; i < V; i++) adj.add(new ArrayList<>());
+        
+        for (int i = 0; i < m; i++) {
+                adj.get(edges[i][0]).add(new Pair(edges[i][1], edges[i][2]));
+                adj.get(edges[i][1]).add(new Pair(edges[i][0], edges[i][2]));
         }
         
-        PriorityQueue<Pair> pq = new PriorityQueue<>((x, y) -> x.dis - y.dis);
-        int[] dis = new int[n + 1];
-        int[] parent = new int[n + 1];
+        int[] dis = new int[V];
+        int[] parent = new int[V];
         
         Arrays.fill(dis, Integer.MAX_VALUE);
-        for (int i = 1; i < n; i++) parent[i] = i;
+        for (int i = 0; i < V; i++) parent[i] = i;
         
+        PriorityQueue<Pair> pq = new PriorityQueue<>((p1, p2) -> p1.dis - p2.dis);
         pq.add(new Pair(1, 0));
         dis[1] = 0;
         
         while (!pq.isEmpty()) {
             Pair p = pq.poll();
             int node = p.node;
-            int wt = p.dis;
+            int d = p.dis;
             
-            for (Pair adjP: adj.get(node)) {
-                int adjNode = adjP.node;
-                int adjWt = adjP.dis;
-                
-                if (wt + adjWt < dis[adjNode]) {
-                    dis[adjNode] = wt + adjWt;
-                    pq.add(new Pair(adjNode, dis[adjNode]));
-                    parent[adjNode] = node;
+            for (Pair adjNode: adj.get(node)) {
+                if (d + adjNode.dis < dis[adjNode.node]) {
+                    dis[adjNode.node] = d + adjNode.dis;
+                    pq.add(new Pair(adjNode.node, dis[adjNode.node]));
+                    parent[adjNode.node] = node;
                 }
             }
         }
         
+        List<Integer> ans = new ArrayList<>();
+        
         // System.out.println(Arrays.toString(dis));
-        // System.out.println(Arrays.toString(parent));
         
-        ArrayList<Integer> res = new ArrayList<>();
-        
-        if(dis[n] == Integer.MAX_VALUE) {
-            res.add(-1); 
-            return res; 
+        if (dis[n] == Integer.MAX_VALUE) {
+            ans.add(-1);
+            return ans;
         }
         
-        // res.add(dis[n]);
-        
         int node = n;
-        while (parent[node] != node) {
-            res.add(node);
+        int wt = dis[n];
+        while(parent[node] != node) {
+            ans.add(node);
             node = parent[node];
         }
         
-        res.add(1);
-        res.add(dis[n]);
-        Collections.reverse(res);
+        ans.add(1);
+        ans.add(wt);
         
-        // System.out.println(res);
         
-        return res;
-    }
-}
-
-class Pair{
-    int node;
-    int dis;
-    public Pair(int node,int dis){
-        this.node = node;
-        this.dis = dis;
+        Collections.reverse(ans);
+        // System.out.println(ans);
+        return ans;
     }
 }
