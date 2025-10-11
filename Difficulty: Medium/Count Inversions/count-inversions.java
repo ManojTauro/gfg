@@ -13,7 +13,7 @@ class Solution {
         
         count += mergeSort(arr, l, m);
         count += mergeSort(arr, m + 1, h);
-        count +=merge(arr, l, m, h);
+        count += merge(arr, l, m, h);
         
         return count;
     }
@@ -46,8 +46,9 @@ class Solution {
             right++;
         }
         
+        int k = 0;
         for (int i = l; i <= h; i++) {
-            arr[i] = list.get(i - l);
+            arr[i] = list.get(k++);
         }
         
         return count;
