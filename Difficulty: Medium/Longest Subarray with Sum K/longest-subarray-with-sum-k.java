@@ -19,8 +19,8 @@ class Solution {
             }
             
             if (!map.containsKey(prefixSum))
-                map.put(prefixSum, i);
-        }
+                map.put(prefixSum, i);    
+        }   
         
         return ans;
         
