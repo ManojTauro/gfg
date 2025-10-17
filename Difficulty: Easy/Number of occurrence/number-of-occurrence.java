@@ -1,74 +1,48 @@
-//{ Driver Code Starts
-// Initial Template for Java
-
-import java.io.*;
-import java.util.*;
-
-class GFG {
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int tc = Integer.parseInt(br.readLine().trim());
-
-        while (tc-- > 0) {
-
-            String[] str = br.readLine().trim().split(" ");
-            int[] a = new int[str.length];
-            for (int i = 0; i < str.length; i++) {
-                a[i] = Integer.parseInt(str[i]);
-            }
-            String[] nk = br.readLine().trim().split(" ");
-            int k = Integer.parseInt(nk[0]);
-            Solution sln = new Solution();
-            int ans = sln.countFreq(a, k);
-
-            System.out.println(ans);
-            System.out.println("~");
-        }
-    }
-}
-// } Driver Code Ends
-
-
 class Solution {
-    int countFreq(int[] arr, int target) {
-        int l = lb(arr, target);
-        int u = ub(arr, target);
-        return u - l;
+    int countFreq(int[] nums, int t) {
+        int l = lowerBound(nums, t);
+        
+        if (l == -1) return 0;
+
+        int r = ub(nums, t);
+
+        return r - l + 1;
+        
     }
     
-    private int lb(int[] arr, int t) {
+    private int lowerBound(int[] nums, int t) {
         int l = 0;
-        int h = arr.length - 1;
-        int ans = arr.length;
-        
+        int h = nums.length - 1;
+        int ans = nums.length;
+
         while (l <= h) {
             int m = (l + h) / 2;
-            
-            if (arr[m] >= t) {
+
+            if (nums[m] >= t) {
                 ans = m;
                 h = m - 1;
             } else l = m + 1;
-            
         }
-        
-        return ans;
+
+        if (ans < nums.length && nums[ans] == t) return ans;
+
+        return -1;
     }
-    
-    private int ub(int[] arr, int t) {
+
+    private int ub(int[] nums, int t) {
         int l = 0;
-        int h = arr.length - 1;
-        int ans = arr.length;
-        
+        int h = nums.length - 1;
+        int ans = nums.length;
+
         while (l <= h) {
             int m = (l + h) / 2;
-            
-            if (arr[m] > t) {
+
+            if (nums[m] > t) {
                 ans = m;
                 h = m - 1;
             } else l = m + 1;
-            
         }
-        
-        return ans;
+
+        return ans - 1;
     }
 }
