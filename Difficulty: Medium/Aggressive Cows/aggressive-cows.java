@@ -1,33 +1,34 @@
 class Solution {
     public int aggressiveCows(int[] stalls, int k) {
+        // code here
         Arrays.sort(stalls);
-        int len = stalls.length;
         
-        int low = 0;
-        int high = stalls[len - 1] - stalls[0]; // max distance possible
+        int l = 1;
+        int h = Arrays.stream(stalls).max().getAsInt() - Arrays.stream(stalls).min().getAsInt();
         
-        while (low <= high) {
-            int m = (low + high) / 2;
+        while (l <= h) {
+            int m = (l + h) / 2;
             
-            if (canWePlaceCows(stalls, m, k)) low = m + 1;
-            else high = m - 1;
+            if (canPlaceCows(stalls, k, m)) {
+                l = m + 1;
+            } else h = m - 1;
         }
         
-        return high;
+        return h;
     }
     
-    private boolean canWePlaceCows(int[] arr, int dis, int k) {
-        int placedCowsCount = 1;
-        int lastPlacedCow = arr[0];
+    private boolean canPlaceCows(int[] stalls, int k, int minDis) {
+        int curCows = 1;
+        int lastPlace = stalls[0];
         
-        for (int i = 1; i < arr.length; i++) {
-            if (arr[i] - lastPlacedCow >= dis) {
-                placedCowsCount++;
-                lastPlacedCow = arr[i];
+        for (int i = 1; i < stalls.length; i++) {
+            if (stalls[i] - lastPlace >= minDis) {
+                curCows += 1;
+                lastPlace = stalls[i];
             }
         }
         
-        if (placedCowsCount >= k) return true;
+        if (curCows >= k) return true;
         
         return false;
     }
