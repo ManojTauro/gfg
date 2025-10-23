@@ -16,31 +16,27 @@ class Solution {
         while (low <= high) {
             int m = (low + high) / 2;
             
-            boolean isPossible = canDistribute(arr, m, k);
-            // isPossible = true means, books can be distributed to
-            // more students than allowed, so we need to increase
-            // pages
-            if (isPossible) high = m - 1;
+            if (canAllocate(arr, m, k)) high = m - 1;
             else low = m + 1;
         }
         
         return low;
     }
     
-    private boolean canDistribute(int[]arr, int maxPages, int k) {
-        int pageCount = 0;
-        int students = 1;
+    private boolean canAllocate(int[] arr, int minPages, int k) {
+        int studentCount = 1;
+        int pages = arr[0];
         
-        for (int num: arr) {
-            if (pageCount + num <= maxPages) {
-                pageCount += num;
-            } else {
-                students++;
-                pageCount = num;
+        for (int i = 1; i < arr.length; i++) {
+            pages += arr[i];
+            
+            if (pages > minPages) {
+                studentCount++;
+                pages = arr[i];
             }
         }
         
-        if (students <= k) return true;
+        if (studentCount <= k) return true;
         
         return false;
     }
