@@ -20,16 +20,14 @@ class Solution {
         int boardLen = 0;
         
         for (int len: arr) {
-            if (boardLen + len > time) {
+            boardLen = boardLen + len;
+            
+            if (boardLen > time) {
                 paintersUsed += 1;
                 boardLen = len;
-            } else {
-                boardLen += len;
             }
         }
         
-        if (paintersUsed > k) return false;
-        
-        return true;
+        return paintersUsed <= k;
     }
 }
