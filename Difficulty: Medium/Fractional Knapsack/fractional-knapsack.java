@@ -12,7 +12,11 @@ class Solution {
         }
         
         Comparator<Pair> cmp = (
-            (p1, p2) -> Double.compare((double) p2.val / p2.wt, (double) p1.val / p1.wt)
+            (p1, p2) -> {
+                double r2 = (double) p2.val / p2.wt;
+                double r1 = (double) p1.val / p1.wt;
+                return Double.compare(r2, r1);
+            }
         );
         Collections.sort(sortedPair, cmp);
         
@@ -26,7 +30,7 @@ class Solution {
                 int v = p.val;
                 int w = p.wt;
                 
-                double ratio = (double) p.val / (double) p.wt;
+                double ratio = (double) p.val / p.wt;
                 ans += ratio * capacity;
                 capacity = 0;
             }
