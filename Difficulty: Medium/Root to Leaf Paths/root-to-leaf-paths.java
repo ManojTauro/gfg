@@ -18,31 +18,29 @@ class Node
 
 class Solution {
     public static ArrayList<ArrayList<Integer>> Paths(Node root) {
-        ArrayList<ArrayList<Integer>> res = new ArrayList<>();
-        ArrayList<Integer> temp = new ArrayList<>();
+        // code here
+        ArrayList<ArrayList<Integer>> ans = new ArrayList<>();
+        dfs(root, new ArrayList<>(), ans);
         
-        f(root, temp, res);
-        
-        return res;
+        return ans;
     }
     
-    private static void f(Node root,  ArrayList<Integer> temp, ArrayList<ArrayList<Integer>> res) {
-        temp.add(root.data);
-        
+    private static void dfs(Node root, ArrayList<Integer> temp, ArrayList<ArrayList<Integer>> ans) {
         if (root.left == null && root.right == null) {
-            res.add(new ArrayList<>(temp));
-            temp.remove(temp.size() - 1);
+            temp.add(root.data);
+            ans.add(new ArrayList<>(temp));
             return;
         }
         
+        temp.add(root.data);
         if (root.left != null) {
-            f(root.left, temp, res);
+            dfs(root.left, temp, ans);
+            temp.remove(temp.size() - 1);   
         }
-        
+    
         if (root.right != null) {
-            f(root.right, temp, res);
+            dfs(root.right, temp, ans);
+            temp.remove(temp.size() - 1);
         }
-        
-        temp.remove(temp.size() - 1);
     }
 }
