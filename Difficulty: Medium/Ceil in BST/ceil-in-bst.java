@@ -8,20 +8,18 @@
     }
 } */
 
-class Tree {
-    int findCeil(Node root, int key) {
+class Solution {
+    int findCeil(Node root, int x) {
         // code here
-        int ceil = -1;
+        int ans = -1; // ceil
         
         while (root != null) {
-            if (root.data >= key) {
-                ceil = root.data;
+            if (root.data >= x) {
+                ans = root.data;
                 root = root.left;
-            } else if (root.data < key) {
-                root = root.right;
-            }
+            } else root = root.right;
         }
         
-        return ceil;
+        return ans;
     }
 }
