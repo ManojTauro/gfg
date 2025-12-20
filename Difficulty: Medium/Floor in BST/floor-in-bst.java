@@ -1,17 +1,30 @@
-// User function Template for Java
+/*
+class Node {
+    int data;
+    Node left, right;
+
+    Node(int val)
+    {
+        data = val;
+        left = right = null;
+    }
+}
+*/
 
 class Solution {
     public static int floor(Node root, int x) {
-        // Code here
-        int floor = -1;
+        // code here
+        int ans = -1; // fllow
         
         while (root != null) {
-            if (root.data <= x) {
-                floor = root.data;
+            if (root.data > x) {
+                root = root.left;
+            } else {
+                ans = root.data;
                 root = root.right;
-            } else root = root.left;
+            }
         }
         
-        return floor;
+        return ans;
     }
 }
