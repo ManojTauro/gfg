@@ -1,76 +1,113 @@
 class Solution {
     public String longestValidWord(String[] words) {
-        Trie trie = new Trie();
-        
-        for (String word: words) trie.insert(word);
-        
-        String longest = "";
+        Trie t = new Trie();
         
         for (String word: words) {
-            if (trie.checkIfAllPrefixExists(word)) {
-                if (word.length() > longest.length()) longest = word;
-                else if (word.length() == longest.length() && word.compareTo(longest) < 0) longest = word;
+            t.insert(word);
+        }
+        
+        int maxLen = 0;
+        String ans = "";
+        
+        for (String word: words) {
+            if (t.checkIfAllPrefixExists(word)) {
+                if (word.length() > maxLen) {
+                    maxLen = word.length();
+                    ans = word;
+                } else if (word.length() == maxLen) {
+                    if (ans.compareTo(word) > 0) ans = word; 
+                }
             }
         }
         
-        return longest;
+        return ans;
+        
+    }
+}
+
+class Node {
+    List<Node> links = new ArrayList<>();
+    boolean isEnd;
+
+    public Node() {
+        for (int i = 0; i < 26; i++) 
+            links.add(null);
+    }
+
+    boolean contains(char c) {
+        int index = c - 'a';
+        return links.get(index) != null;
+    }
+
+    void put(char c, Node ref) {
+        int index = c - 'a';
+        links.set(index, ref);
+    }
+
+    Node next(char c) {
+        int index = c - 'a';
+        return links.get(index);
+    }
+
+    void updateEnd() {
+        this.isEnd = true;
     }
 }
 
 class Trie {
-    private Node root;
+    Node root;
 
     public Trie() {
         root = new Node();
     }
     
     public boolean checkIfAllPrefixExists(String word) {
-        Node node = root;
+        Node cur = root;
         
         for (char c: word.toCharArray()) {
-            if (!node.containsKey(c)) return false;
+            if (!cur.contains(c)) return false;
             
-            node = node.get(c);
-            if (node.isEndOfWord() == false) return false;
+            cur = cur.next(c);
+            
+            if (!cur.isEnd) return false;
         }
         
         return true;
     }
     
     public void insert(String word) {
-        Node node = root;
-
+        Node cur = root;
         for (char c: word.toCharArray()) {
-            if (!node.containsKey(c)) node.put(c, new Node());
-
-            node = node.get(c);
+            if (!cur.contains(c)) {
+                cur.put(c, new Node());
+            }
+            cur = cur.next(c);
         }
 
-        node.setEndOfWord();
+        cur.updateEnd();
     }
-}
+    
+    public boolean search(String word) {
+        Node cur = root;
+        for (char c: word.toCharArray()) {
+            if (!cur.contains(c)) return false;
 
-class Node {
-    Node links[] = new Node[26];
-    boolean endOfWord;
+            cur = cur.next(c);
+        }
 
-    public boolean containsKey(char c) {
-        return links[c - 'a'] != null;
+        if (cur.isEnd) return true;
+
+        return false;
     }
+    
+    public boolean startsWith(String prefix) {
+        Node cur = root;
+        for (char c: prefix.toCharArray()) {
+            if (!cur.contains(c)) return false;
 
-    public void put(char c, Node node) {
-        links[c - 'a'] = node;
-    }
+            cur = cur.next(c);
+        }
 
-    public Node get(char c) {
-        return links[c - 'a'];
-    }
-
-    public void setEndOfWord() {
-        this.endOfWord = true;
-    }
-
-    public boolean isEndOfWord() {
-        return this.endOfWord;
+        return true;
     }
 }
